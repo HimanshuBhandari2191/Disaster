@@ -1,0 +1,8 @@
+.ipynb_checkpoints/
+__pycache__/
+node_modules/
+dataset/
+ml-api/venv/
+ml-api/__pycache__/
+ml-api/.vscode/
+*.parquet

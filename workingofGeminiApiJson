@@ -1,0 +1,50 @@
+graph TD
+    %% Main Components
+    subgraph Frontend [App.jsx - React Frontend]
+        UI[User Input Form]
+        Display[Display Results & AI Analysis]
+    end
+
+    subgraph Backend [disasterController.js - Express]
+        Route[Controller Route]
+        Combine[Merge Data]
+    end
+
+    subgraph External_Services [External APIs]
+        ML[ML API - Flask/FastAPI]
+        AI_SVC[aiService.js - Gemini Integration]
+        Gemini[Gemini AI - LLM]
+    end
+
+    %% JSON Parsing Steps (Dashed Box Logic)
+    subgraph Parsing_Logic [JSON Transformation Steps]
+        RawText[Gemini Raw Text Output]
+        Clean[Clean Markdown / Fences]
+        Parse[JSON.parse to Object]
+        Structured[Structured AI Object]
+    end
+
+    %% Workflow Connections
+    UI -->|1. Request JSON| Route
+    Route -->|2. Forward Input| ML
+    ML -->|3. Probability JSON| Route
+
+    Route -->|4. Request Analysis| AI_SVC
+    AI_SVC -->|5. Prompt Engineering| Gemini
+    Gemini -->|6. Raw Text| RawText
+    
+    RawText --> Clean
+    Clean --> Parse
+    Parse --> Structured
+    
+    Structured -->|7. ai_analysis Object| AI_SVC
+    AI_SVC -->|8. Return Object| Route
+
+    Route --> Combine
+    Combine -->|9. Final Merged JSON| Display
+
+    %% Styling
+    style Parsing_Logic fill:#f9f9f9,stroke:#333,stroke-dasharray: 5 5
+    style Frontend fill:#e1f5fe
+    style Backend fill:#fff3e0
+    style External_Services fill:#f3e5f5
