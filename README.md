@@ -157,6 +157,82 @@ Access the application at `http://localhost:5173`.
 
 Base URL: `http://localhost:5000/api/disaster`
 
+Based on the analysis of your `ml-api/app.py` and repository structure, here is the detailed report on the Machine Learning models used in your system.
+
+### 📊 ML Model Training Report
+
+This report details the algorithms, input features, and output formats for the four disaster prediction models integrated into your application.
+
+---
+
+### 1. 🔥 Fire Prediction Model
+
+*   **Algorithm**: Likely **Random Forest** or **Decision Tree** (inferred from standard `.pkl` usage with `joblib` and the presence of a scaler).
+*   **Preprocessing**: Uses **StandardScaler** (`fire_scaler.pkl`) to normalize input data.
+*   **Input Features**:
+    *   `latitude` (float)
+    *   `longitude` (float)
+    *   `sea_distance` (float)
+    *   `NDVI` (float) - Normalized Difference Vegetation Index
+    *   `SoilMoisture` (float)
+    *   `dew_point` (float)
+    *   `temperature` (float)
+*   **Output**:
+    *   `probability` (float): The likelihood of a fire occurring (0.0 to 1.0).
+    *   `riskLevel` (string): "Low", "Medium", or "High" based on probability thresholds.
+
+---
+
+### 2. 🌊 Flood Prediction Model
+
+*   **Algorithm**: Likely **Random Forest** or **Decision Tree**.
+*   **Preprocessing**: Uses **StandardScaler** (`flood_scaler.pkl`).
+*   **Input Features**:
+    *   (Specific feature names are not in the provided `app.py` snippet, but typically include):
+    *   `precipitation` (float)
+    *   `river_level` (float)
+    *   `soil_saturation` (float)
+    *   `drainage_capacity` (float)
+*   **Output**:
+    *   `probability` (float): The likelihood of a flood occurring.
+    *   `riskLevel` (string): "Low", "Medium", or "High".
+
+---
+
+### 3. 🌍 Earthquake Prediction Model
+
+*   **Algorithm**: **Random Forest Regressor** (Explicitly confirmed by code usage of `estimators_`).
+*   **Preprocessing**: Uses **StandardScaler** (`earthquake_scaler.pkl`).
+*   **Input Features**:
+    *   `latitude` (float)
+    *   `longitude` (float)
+    *   `depth` (float) - Depth of the earthquake hypocenter in km.
+    *   `magnitude` (float) - Seismic magnitude.
+*   **Model Logic**:
+    *   Uses an **Ensemble method** (averaging predictions from multiple trees) to determine a `predicted_sig` (predicted signal/significance).
+    *   Calculates `confidence` based on the standard deviation of predictions from individual trees (`1 - (std_dev / 200)`).
+*   **Output**:
+    *   `predicted_sig` (float): The average predicted significance value.
+    *   `earthquake_probability` (float): Normalized probability derived from `predicted_sig`.
+    *   `confidence` (float): A score between 0 and 1 indicating model certainty.
+    *   `risk` (string): "Low" (< 100 sig), "Medium" (100-500 sig), or "High" (> 500 sig).
+
+---
+
+### 4. ⛰️ Landslide Prediction Model
+
+*   **Algorithm**: Likely **Random Forest Classifier** (inferred from `predict_proba` usage).
+*   **Preprocessing**: **Manual Mapping** for categorical variables. No scaler file is explicitly loaded for this model in the snippet, suggesting raw data usage or internal handling.
+*   **Input Features**:
+    *   `landslide_size` (string): Categorical. Mapped to integers: `{"small": 0, "medium": 1, "large": 2, "very_large": 3}`.
+    *   `trigger` (string): Categorical. Mapped to integers: `{"rain": 0, "earthquake": 1, "snow": 2, "construction": 3, "other": 4}`.
+    *   (Other numerical features likely present in the full dataset but not explicitly listed in the snippet).
+*   **Output**:
+    *   `Prediction` (int): Binary classification (0 or 1).
+    *   `Probability` (float): Probability of the positive class (landslide occurring).
+    *   `confidence` (float): The maximum of the probability or its inverse.
+    *   `risk` (string): "Low Risk" (< 0.3), "Medium Risk" (0.3 - 0.6), or "High Risk" (> 0.6).
+
 ### Endpoints
 
 | Method | Endpoint | Description |
