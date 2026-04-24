@@ -1,4 +1,3 @@
-Here is the complete, detailed `README.md` file for your repository in English. You can copy and paste this directly into your project root.
 
 ```markdown
 # Disaster Prediction System
